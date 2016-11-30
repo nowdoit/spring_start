@@ -34,4 +34,30 @@ public class GuestDao {
 		}
 		return list;
 	}
+
+	public void insertOne(GuestVo bean) throws SQLException, ClassNotFoundException {
+		String sql = "INSERT INTO guest VALUES (?, ?, SYSDATE, ?)";
+		try {
+			pstmt = OraDB.getConn().prepareStatement(sql);
+			pstmt.setInt(1, bean.getSabun());
+			pstmt.setString(2, bean.getName());
+			pstmt.setInt(3, bean.getPay());
+			pstmt.executeUpdate();
+		} finally {
+			if (pstmt != null) pstmt.close();
+			if (OraDB.getConn() != null) OraDB.getConn().close();
+		}
+	}
+	
+	public void deleteOne(int sabun) throws SQLException, ClassNotFoundException {
+		String sql = "DELETE FROM guest WHERE sabun = ?";
+		try {
+			pstmt = OraDB.getConn().prepareStatement(sql);
+			pstmt.setInt(1, sabun);
+			pstmt.executeUpdate();
+		} finally {
+			if (pstmt != null) pstmt.close();
+			if (OraDB.getConn() != null) OraDB.getConn().close();
+		}
+	}
 }

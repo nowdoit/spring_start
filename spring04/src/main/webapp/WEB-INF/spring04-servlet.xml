@@ -3,6 +3,11 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
+<!-- dao bean -->                                      <!-- scope default "singleton" -->
+	<bean id="loginBean" class="com.user.model.LoginBean" scope="singleton"></bean>
+	<bean id="userDao" class="com.user.model.UserDao"></bean>
+	<bean id="guestDao" class="com.guest.model.GuestDao"></bean>
+
 <!-- handlerMapping -->
 	<!--  
 	<bean id="handlerMapping" class="org.springframework.web.servlet.handler.BeanNameUrlHandlerMapping"></bean>
@@ -13,21 +18,33 @@
 				<prop key="/login.do">login</prop>
 				<prop key="/result.do">loginResult</prop>
 				<prop key="/bbs/list.do">guestlist</prop>
+				<prop key="/bbs/add.do">guestAdd</prop>
+				<prop key="/bbs/insert.do">guestInsert</prop>
 			</props>
 		</property>
 	</bean>
+<!-- dao -->
+		
 <!-- controller -->
-	<bean id="userDao" class="com.user.model.UserDao"></bean>
 	<bean name="login" class="org.springframework.web.servlet.mvc.ParameterizableViewController">
-		<property name="viewName" value="login"></property>
+		<property name="viewName" value="user/login"></property>
 	</bean>
 	<bean name="loginResult" class="com.user.controller.LoginController">
 		<property name="dao" ref="userDao"></property>
+		<property name="login" ref="loginBean"></property>
 	</bean>
 	<bean name="guestlist" class="com.guest.controller.ListController">
 		<property name="dao" ref="guestDao"></property>
+		<property name="login" ref="loginBean"></property>
 	</bean>
-	
+	<bean name="guestAdd" class="org.springframework.web.servlet.mvc.ParameterizableViewController">
+		<property name="viewName" value="guest/form"></property>
+	</bean>
+	<bean name="guestInsert" class="com.guest.controller.InsertController">
+		<property name="commandClass" value="com.guest.model.GuestVo"></property>
+		<property name="commandName" value="guestVo"></property>
+		<property name="dao" ref="guestDao"></property>
+	</bean>
 	
 <!-- viewResolver -->
 	<bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
